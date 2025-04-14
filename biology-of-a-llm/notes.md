@@ -98,3 +98,68 @@ How does Claude 3.5 Haiku write a rhyming poem?
 > The same “rabbit” planning features are active in the graph, promoting a group of “comparison features”, which are active before text such as “like a”. The model goes from the planned target (“rabbit”) that activates at the newline and reasons backwards, creating a plausible transition to get to it.
 
 
+### Multilingual Circuts 
+
+- Prompts with identical meaning in English, French, and Chinese activate shared multilingual circuits.
+- Abstract "antonym" and "small" features are language-agnostic.
+- Language-specific output features are selected based on input language.
+- Three-part decomposition of computation:
+    - Operation: antonym/synonym.
+    - Operand: the word.
+    - Language: contextual language inferred from features.
+
+- Claude uses shared middle-layer multilingual features and then routes through language-specific heads for the final output.
+
+#### Intervention Experiments
+Edit Operation (Antonym → Synonym):
+- Swapping in synonym features leads to correct language-specific synonym prediction.
+- Demonstrates language-agnostic operation representation.
+- Substituting "hot"-related features causes correct antonym prediction across languages.
+- Operand circuits are shared across languages.
+
+Edit Language (English → Chinese/French):
+- Model continues same operation/operand reasoning, but changes final output language.
+- Output rerouted via different say-X-in-language-Y nodes.
+
+Middle layers: language-independent features dominate.
+Early and late layers: more language-specific.
+
+
+### Addition
+
+How does Claude 3.5 Haiku perform two-digit addition (36 + 59)?
+
+- Computes approximate sum in parallel with computing the ones digit.
+- Combines rough and precise pathways to reach correct result.
+- Uses “lookup table” features to map input digit endings (6 + 9) to output ones digit.
+
+
+> Like humans, the model memorizes single-digit addition but implements multi-digit addition differently from explicit algorithms.
+
+Probing of 10,000 prompts reveals distinct feature types:
+- Diagonal patterns: features sensitive to overall sum.
+- Vertical/horizontal stripes: sensitive to individual addends.
+- Points/repeats: lookup tables & modular patterns.
+- Smeared: low-precision approximations.
+
+#### Attribution Graph (36+59)
+- Low-precision pathway: “~36 + ~60 → ~92”
+- High-precision path: “_6 + _9 → _5”
+- Both feed into final “sum = 95” prediction.
+
+
+Same lookup features activate in non-arithmetic contexts:
+- Predicting end times in time series.
+- Projecting cumulative cost in revenue tables.
+- Completing academic citations (e.g., Polymer, vol. 36 → pub. year 1995 via 36 + 59).
+- Model reuses arithmetic features across diverse domains.
+
+#### Intervention Experiments
+
+- Suppressing _6 + _9 reduces correct prediction.
+- Replacing with _9 + _9 shifts output to match altered ones digit.
+- Confirms causal role of arithmetic circuits in downstream predictions.
+
+- Weak suppressive mechanism prevents saying “9” prematurely.
+
+> Addition features are reused flexibly — either to emit final answers or to pass values to further computations, depending on context.
