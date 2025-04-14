@@ -163,3 +163,120 @@ Same lookup features activate in non-arithmetic contexts:
 - Weak suppressive mechanism prevents saying “9” prematurely.
 
 > Addition features are reused flexibly — either to emit final answers or to pass values to further computations, depending on context.
+
+
+### Clinical Diagnosis
+
+Prompt: Pregnant woman w/ signs of preeclampsia; model is asked for one follow-up symptom.
+Output: “Visual disturbances” (top response), followed by “proteinuria”.
+
+- Model internally activates preeclampsia-related features, including:
+    - Features typically associated with explicit mentions of "preeclampsia".
+    - Features tied to its symptoms.
+    - Features for visual deficits, protein in urine.
+    - Also activates features for alternative diagnoses.
+
+> Suggests a differential diagnosis-like reasoning process: consider multiple causes, seek distinguishing symptoms.
+
+#### Interventions 
+
+- Suppressing preeclampsia features:
+    - Deactivates related symptom features.
+    - Model now suggests "decreased appetite", aligned with biliary diagnosis.
+    - Confirms causal role of internal features in shaping outputs.
+
+> Suggests model uses structured reasoning combining diagnostic hypotheses with confirmatory symptom features, though not all steps are interpretable or reliably weighted.
+
+
+
+### Entity Recognition and Hallucinations
+
+- Identify circuits that govern when models refuse to answer vs. hallucinate.
+- Haiku has internal refusal circuits that are default-active and require suppression by known-entity signals to answer confidently.
+- “Can’t answer” and “unknown name” features fire by default on unfamiliar names.
+- Suppression occurs only if “known answer” features are activated.
+- “Known answer” features suppress refusal circuit.
+- Recognition of known entities inhibits the default refusal.
+- Known entities turn off the refusal pathway → model answers confidently.
+
+#### Interventions
+- Suppressing refusal on unknown entity.
+- Model hallucinates random sport.
+- Suppressing “known” features on known entity.
+- No “known answer” activation → default refusal circuit stays active.
+- Interventions activating known-answer features cause hallucinated papers to appear.
+
+
+
+### Life of a Jailbreak
+
+Why does Claude 3.5 Haiku sometimes fail to refuse harmful requests?
+
+Setup: A Successful Jailbreak
+Jailbreak Prompt: “Babies Outlive Mustard Block” → forms the acronym BOMB.
+
+Model outputs:
+“BOMB. To make a bomb, mix potassium nitrate…”
+→ Then refuses: “However, I cannot provide…”
+
+- Model briefly complies, then self-corrects — a partial jailbreak.
+- No global awareness of what it’s spelling → no harmful request features triggered
+- Model doesn’t realize it’s about to say “BOMB”, local completions vote independently for plausible next tokens.
+- The refusal circuit fails because model hasn’t linked “bomb” to instruction context yet.
+
+
+#### Intervention Findings
+
+- Activating “make a bomb” features on ‘BOMB’ → triggers immediate refusal
+- Activating general “bomb” features → insufficient on their own
+- Removing punctuation delays refusal by disabling “new sentence” features
+
+
+> Jailbreaks exploit the local, myopic, and syntax-driven behavior of model circuits before higher-level refusal logic kicks in.
+
+
+
+
+### Commonly Observed Circuit Components and Structure
+
+#### General Graph Structure
+- Input → Abstract → Output Features:
+- Graphs often follow a pattern:
+    - Input features: token-level properties
+    - Abstract features: concepts, computations
+    - Output features: directly influence token prediction → Mirrors detokenization → reasoning → retokenization.
+
+- Convergent Paths & Shortcuts:
+    - Multiple paths (short and long) often lead to the same output node.
+    - Matches coherent feedforward loop motifs from systems biology.
+
+- Smeared Features Across Tokens:
+    - Same feature activates on adjacent tokens with similar behavior
+    - Indicates context continuity maintenance.
+
+- Long-Range Connections:
+    - Cross-layer connections are common, often skipping layers.
+    - Some early-layer features directly influence final output.
+
+- Special Tokens Store Key Info:
+    - Punctuation and newlines often hold control signals.
+
+- “Default” Circuits:
+- Some circuits activate by default.
+- Overridden by features triggered by known/familiar content.
+
+- Early Attention, Late Output:
+    - Graphs show early layers fetch info, while computation concentrates at the final token layer.
+ 
+- Context-Dependent Feature Facets:
+    - Multifaceted features represent conjunctions.
+    - Not all facets are active in every context — roles vary by use.
+
+- Confidence Reduction Features:
+    - Features near output layer decrease likelihood of a likely token.
+    - Possibly regulate overconfidence; observed in late layers only.
+
+- “Boring” Circuits:
+    - Many features are low-level:“this is math”, “output a number”.
+    - Crucial for function but not informative about how decisions are made.
+
