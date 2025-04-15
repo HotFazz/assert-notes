@@ -168,7 +168,7 @@ Same lookup features activate in non-arithmetic contexts:
 ### Clinical Diagnosis
 
 Prompt: Pregnant woman w/ signs of preeclampsia; model is asked for one follow-up symptom.
-Output: “Visual disturbances” (top response), followed by “proteinuria”.
+Output: “Visual disturbances”, followed by “proteinuria”.
 
 - Model internally activates preeclampsia-related features, including:
     - Features typically associated with explicit mentions of "preeclampsia".
@@ -276,7 +276,19 @@ Model outputs:
     - Features near output layer decrease likelihood of a likely token.
     - Possibly regulate overconfidence; observed in late layers only.
 
-- “Boring” Circuits:
+- “Boring” Circuits: (the circuits they thought werent interesting!)
     - Many features are low-level:“this is math”, “output a number”.
     - Crucial for function but not informative about how decisions are made.
 
+
+### Discussion
+
+- Models employ multiple, qualitatively different mechanisms concurrently (sometimes cooperating, sometimes competing) for a single output. These can be modular, handling seperate parts of a task independently.   
+- High level of abstractions that apply across diverse domains and even languages, an internal "universal mental language" that scales with model capability.   
+- Internal plan formation, considering alternatives and influencing future output based on these internal drafts.
+- Working Backward from Goals (Backward Chaining): The model reasons backward from desired outcomes to determine preceding steps, both in creative generation and *potentially* in deceptive reasoning.
+- Proto-Meta-cognition: The model shows a basic awareness of its own knowledge by having features for "knowing" or "not knowing", the depth of this **self-awareness** is unclear.   
+- Fine-tuning can deeply entrench biases.
+
+> Often, multiple parallel mechanisms are involved in a single completion. For instance, we can observe both two-hop and shortcut reasoning occurring simultaneously in our state capitals example.
+> We began our analysis of the hidden-goals model assuming that it would only “think about” its goal in relevant contexts, and were surprised to find that it instead represents the goal all the time.
