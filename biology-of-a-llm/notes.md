@@ -151,8 +151,8 @@ Probing of 10,000 prompts reveals distinct feature types:
 Same lookup features activate in non-arithmetic contexts:
 - Predicting end times in time series.
 - Projecting cumulative cost in revenue tables.
-- Completing academic citations (e.g., Polymer, vol. 36 → pub. year 1995 via 36 + 59).
-- Model reuses arithmetic features across diverse domains.
+- Completing academic citations (Polymer, vol. 36 → pub. year 1995 via 36 + 59).
+- Model reuses arithmetic features across domains.
 
 #### Intervention Experiments
 
